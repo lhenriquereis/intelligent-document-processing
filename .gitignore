@@ -1,0 +1,27 @@
+# Python environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Credentials and API keys
+.env
+.env.*
+!.env.example
+credentials.json
+
+# Sensitive documents and data
+data/private/
+*.pdf
+*.xlsx
+*.xml
+*.db
+*.csv
+
+# Generated files
+output/
+logs/
+
+# Editor settings
+.vscode/
