@@ -30,5 +30,22 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
+      - name: Configure Tesseract OCR
+        shell: pwsh
+        run: |
+          $tessdata = Join-Path $env:RUNNER_TEMP "tessdata"
+
+          New-Item -ItemType Directory -Force $tessdata
+
+          Invoke-WebRequest `
+            -Uri "https://raw.githubusercontent.com/tesseract-ocr/tessdata/4.1.0/eng.traineddata" `
+            -OutFile "$tessdata\eng.traineddata"
+
+          "TESSDATA_PREFIX=$tessdata" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Verify OCR configuration
+        run: python -c "import sys; sys.path.insert(0, 'src'); from extractor import find_tessdata; assert find_tessdata() is not None, 'OCR language data not found'"
+
       - name: Run automated tests
         run: python -m pytest -v
